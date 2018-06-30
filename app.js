@@ -1,11 +1,16 @@
 import Board from './board.js';
+import phrases from './phrases.js';
+import random from './random.js';
 
 function displayBoard() {
+    const phrase = phrases[random(0, phrases.length)];
     const gameArea = document.getElementById('app');
     const message = document.getElementById('message');
-    const board = new Board('She sells seashells by the seashore');
+    const board = new Board(phrase.phrase);
     const usedLetters = new Set();
     const letters = [];
+
+    document.getElementById('hint').innerText = phrase.hint;
 
     gameArea.innerHTML = '';
 
@@ -15,7 +20,8 @@ function displayBoard() {
             phrase += letter.value;
         });
         if(phrase === board.answer) {
-            alert("Winner Winner Chicken Dinner");
+            alert(board.phrase);
+            displayBoard();
         }
     }
 
@@ -63,6 +69,7 @@ function displayBoard() {
         if(letter != ' ') {
             const input = document.createElement('input');
             input.dataset.letter = letter.toLowerCase();
+            input.maxLength = 1;
             input.addEventListener('change', checkLetter);
             letters.push(input);
             gameArea.appendChild(input);
