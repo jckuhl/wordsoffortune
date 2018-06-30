@@ -2,10 +2,12 @@ import Board from './board.js';
 
 function displayBoard() {
     const gameArea = document.getElementById('app');
-    gameArea.innerHTML = '';
+    const message = document.getElementById('message');
     const board = new Board('She sells seashells by the seashore');
     const usedLetters = new Set();
     const letters = [];
+
+    gameArea.innerHTML = '';
 
     function checkWin() {
         let phrase = '';
@@ -17,18 +19,44 @@ function displayBoard() {
         }
     }
 
+    function addLetterToUsed(val) {
+        if(usedLetters.has(val)) {
+            message.innerHTML = 'You\'ve already guessed that letter!';
+        } else {
+            usedLetters.add(val);
+        }
+        let used = 'These letters are incorrect: ';
+        usedLetters.forEach(letter=> {
+            used += letter + ' ';
+        });
+        document.getElementById('used').innerText = used;
+    }
+
+    function findLetter(val) {
+        return letters.filter(letter=> letter.dataset.letter === val);
+    }
+    
+    function isLetterInPuzzle(val) {
+        return findLetter(val).length === 0;
+    }
+
     function checkLetter() {
         let val = this.value.toLowerCase()
         if(this.dataset.letter === val) {
-            letters.filter(letter=> letter.dataset.letter === val).forEach(letter=> {
+            findLetter(val).forEach(letter=> {
                 letter.value = val;
                 letter.disabled = true;
             });
             checkWin();
         } else {
-            console.log('Womp womp');
+            if(isLetterInPuzzle(val)) {
+                message.innerText = 'Sorry, that letter is not in the puzzle';
+                addLetterToUsed(val);
+            } else {
+                message.innerText = 'Sorry, that letter is not in that position';
+            }
+            setTimeout(()=> this.value = '', 1000);
         }
-        usedLetters.add(this.value);
     }
 
     board.letters.forEach(letter=> {
