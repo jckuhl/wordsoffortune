@@ -9,10 +9,24 @@ function displayBoard() {
     const message = document.getElementById('message');
     const letters = [];
     const usedLetters = new Set();
+    let tries = 5;
 
     gameArea.innerHTML = '';
 
     document.getElementById('hint').innerText = phrase.hint;
+
+    function setHearts() {
+        const sparkleheart = '&#x1F496;';
+        const brokeheart = '&#x1F494;';
+        const wrong = 5 - tries;
+        let heartString = '';
+        for(let i = 0; i < 5; i++) {
+            if(i < wrong) heartString += brokeheart;
+            else heartString += sparkleheart;
+        }
+        document.getElementById('hearts').innerHTML = heartString;
+        console.log(heartString);
+    }
 
     function showUsedLetters() {
         const used = document.getElementById('used');
@@ -30,14 +44,8 @@ function displayBoard() {
         return phrase === board.answer;
     }
 
-    function checkLetter() {
-        if(usedLetters.has(event.key)) {
-            message.innerText = 'You\'ve already guessed that letter!';
-        } else {
-            usedLetters.add(event.key);
-            showUsedLetters();
-        }
-        const foundLetters = letters.filter(letter=> letter.dataset.letter === event.key);
+    function findLetters(eventLetter) {
+        const foundLetters = letters.filter(letter=> letter.dataset.letter === eventLetter);
         if(foundLetters.length !== 0) {
             foundLetters.forEach(letter=> letter.value = letter.dataset.letter);
             message.innerText = 'You found a letter!';
@@ -46,11 +54,30 @@ function displayBoard() {
             }
         } else {
             message.innerText = 'That letter is not in the puzzle';
+            tries -= 1;
+            if(tries <= 0) {
+                alert('You Lost!');
+            }
+        }
+    }
+
+    function checkLetter() {
+        if(tries > 0) {
+            if(!"abcdefghijklmnopqrstuvwxyz".includes(event.key)) return;
+            if(usedLetters.has(event.key)) {
+                message.innerText = 'You\'ve already guessed that letter!';
+            } else {
+                usedLetters.add(event.key);
+                showUsedLetters();
+                findLetters(event.key);
+                setHearts();
+            }
         }
     }
 
     board.words.forEach(word=> {
         word += ' ';
+        setHearts();
         const $word = document.createElement('div');
         $word.classList.add('word');
         gameArea.appendChild($word);

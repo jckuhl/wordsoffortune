@@ -24,7 +24,7 @@ const phrases = [
         hint: 'George W Bush bushism'
     },
     {
-        phrase: 'tell me punk do ya feel lucky',
+        phrase: 'do you feel lucky punk',
         hint: 'Dirty Harry'
     },
     {
@@ -46,6 +46,14 @@ const phrases = [
     {
         phrase: 'may as well start an ant farm',
         hint: 'This is how you get ants'
+    },
+    {
+        phrase: 'it all started with a big bang',
+        hint: '13.7 billion years ago'
+    },
+    {
+        phrase: 'the fusing of two metals with a hot torch',
+        hint: 'Michael Scott definition of wedding'
     }
 ]
 
