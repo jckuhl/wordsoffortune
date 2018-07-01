@@ -54,6 +54,10 @@ const phrases = [
     {
         phrase: 'the fusing of two metals with a hot torch',
         hint: 'Michael Scott definition of wedding'
+    },
+    {
+        phrase: 'i am the avatar and you gotta deal with it',
+        hint: 'Avatar Korra'
     }
 ]
 
