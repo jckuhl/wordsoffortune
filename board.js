@@ -2,15 +2,47 @@ import phrases from './phrases.js';
 import random from './random.js';
 
 export default class Board {
-    constructor(selector, message) {
-        this.phrase = phrases[random(0, phrases.length)];
+    constructor(selector, message, hint) {
+        this.phraseBucket = new Set();
+        this.phraseIndex = random(0, phrases.length)
+        this.phrase = phrases[this.phraseIndex];
+        this.phraseBucket.add(this.phraseIndex);
         this.words = this.phrase.phrase.toLowerCase().split(' ');
         this.answer = this.phrase.phrase.toLowerCase().split(' ').join('');
+        this.hint = document.querySelector(hint);
         this.board = document.querySelector(selector);
         this.message = document.querySelector(message)
         this.letters = [];
         this.usedLetters = new Set();
         this.tries = 5;
+    }
+
+    getPhraseIndex() {
+        if(this.phraseBucket.length !== phrases.length) {
+            do {
+                var index = random(0, phrases.length);
+                // ha! a use case for var!
+            } while(this.phraseBucket.has(index));
+            this.phraseBucket.add(index);
+            return index;
+        } else {
+            this.phraseBucket = new Set();
+            return random(0, phrases.length);
+        }
+    }
+
+    reset() {
+        this.board.innerHTML = '';
+        this.phrase = phrases[this.getPhraseIndex()];
+        this.hint.innerText = this.phrase.hint;
+        this.words = this.phrase.phrase.toLowerCase().split(' ');
+        this.answer = this.phrase.phrase.toLowerCase().split(' ').join('');
+        this.letters = [];
+        this.usedLetters = new Set();
+        this.tries = 5;
+        this.createBoard();
+        this.showHearts();
+        this.showUsedLetters();
     }
 
     showHearts() {
@@ -47,17 +79,21 @@ export default class Board {
             foundLetters.forEach(letter=> letter.value = letter.dataset.letter);
             this.message.innerText = 'You found a letter!';
             if(this.checkWin()) {
-                alert('you won');
-                displayBoard()
-                this.tries = 5;
+                this.message.innerText = 'You won!';
+                setTimeout(()=> {
+                    this.reset();
+                    this.message.innerText = 'Pick A Letter';
+                }, 1000);
             }
         } else {
             this.message.innerText = 'That letter is not in the puzzle';
             this.tries -= 1;
             if(this.tries <= 0) {
-                alert('You Lost!');
-                displayBoard();
-                this.tries = 5;
+                this.message.innerText = 'You lost!';
+                setTimeout(()=> {
+                    this.reset();
+                    this.message.innerText = 'Pick A Letter';
+                }, 1000);
             }
         }
     }
@@ -77,6 +113,7 @@ export default class Board {
     }
 
     createBoard() {
+        this.hint.innerText = this.phrase.hint;
         this.words.forEach(word=> {
             word += ' ';
             const $word = document.createElement('div');
