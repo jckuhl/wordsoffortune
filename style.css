@@ -69,6 +69,6 @@ input {
     font-size: 1.25em;
 }
 
-input:hover, input:focus {
+.unused {
     background: skyblue;
 }

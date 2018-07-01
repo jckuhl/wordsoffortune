@@ -76,7 +76,10 @@ export default class Board {
     findLetters(eventLetter) {
         const foundLetters = this.letters.filter(letter=> letter.dataset.letter === eventLetter);
         if(foundLetters.length !== 0) {
-            foundLetters.forEach(letter=> letter.value = letter.dataset.letter);
+            foundLetters.forEach(letter=> {
+                letter.value = letter.dataset.letter;
+                letter.classList.remove('unused');
+            });
             this.message.innerText = 'You found a letter!';
             if(this.checkWin()) {
                 this.message.innerText = 'You won!';
@@ -124,6 +127,7 @@ export default class Board {
                     const input = document.createElement('input');
                     input.dataset.letter = letter;
                     input.disabled = true;
+                    input.classList.add('unused');
                     this.letters.push(input);
                     $word.appendChild(input);
                 } else {
