@@ -82,21 +82,21 @@ export default class Board {
             });
             this.message.innerText = 'You found a letter!';
             if(this.checkWin()) {
-                this.message.innerText = 'You won!';
+                this.message.innerText = 'You won!  New Game in 3 Seconds';
                 setTimeout(()=> {
                     this.reset();
-                    this.message.innerText = 'Pick A Letter';
-                }, 1000);
+                    this.message.innerText = 'Pick a letter by pressing a key!';
+                }, 3000);
             }
         } else {
             this.message.innerText = 'That letter is not in the puzzle';
             this.tries -= 1;
             if(this.tries <= 0) {
-                this.message.innerText = 'You lost!';
+                this.message.innerText = 'You lost!  New Game in 3 Seconds';
                 setTimeout(()=> {
                     this.reset();
-                    this.message.innerText = 'Pick A Letter';
-                }, 1000);
+                    this.message.innerText = 'Pick a letter by pressing a key!';
+                }, 3000);
             }
         }
     }
