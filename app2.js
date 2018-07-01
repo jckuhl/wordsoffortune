@@ -2,7 +2,7 @@ import Board from './board.js';
 import phrases from './phrases.js';
 import random from './random.js';
 
-function displayBoard() {
+(function displayBoard() {
     const phrase = phrases[random(0, phrases.length)];
     const board = new Board(phrase.phrase)
     const gameArea = document.getElementById('app');
@@ -11,11 +11,14 @@ function displayBoard() {
     const usedLetters = new Set();
     let tries = 5;
 
+    showHearts();
+    showUsedLetters();
+
     gameArea.innerHTML = '';
 
     document.getElementById('hint').innerText = phrase.hint;
 
-    function setHearts() {
+    function showHearts() {
         const sparkleheart = '&#x1F496;';
         const brokeheart = '&#x1F494;';
         const wrong = 5 - tries;
@@ -25,7 +28,6 @@ function displayBoard() {
             else heartString += sparkleheart;
         }
         document.getElementById('hearts').innerHTML = heartString;
-        console.log(heartString);
     }
 
     function showUsedLetters() {
@@ -51,12 +53,15 @@ function displayBoard() {
             message.innerText = 'You found a letter!';
             if(checkWin()) {
                 alert('you won');
+                displayBoard()
             }
         } else {
             message.innerText = 'That letter is not in the puzzle';
             tries -= 1;
             if(tries <= 0) {
                 alert('You Lost!');
+                displayBoard();
+                tries = 5;
             }
         }
     }
@@ -70,14 +75,13 @@ function displayBoard() {
                 usedLetters.add(event.key);
                 showUsedLetters();
                 findLetters(event.key);
-                setHearts();
+                showHearts();
             }
         }
     }
 
     board.words.forEach(word=> {
         word += ' ';
-        setHearts();
         const $word = document.createElement('div');
         $word.classList.add('word');
         gameArea.appendChild($word);
@@ -97,6 +101,4 @@ function displayBoard() {
     });
 
     document.addEventListener('keyup', checkLetter);
-}
-
-displayBoard();
+})();
