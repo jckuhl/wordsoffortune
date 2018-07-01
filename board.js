@@ -18,7 +18,7 @@ export default class Board {
     }
 
     getPhraseIndex() {
-        if(this.phraseBucket.length !== phrases.length) {
+        if(this.phraseBucket.size !== phrases.length) {
             do {
                 var index = random(0, phrases.length);
                 // ha! a use case for var!
@@ -26,7 +26,7 @@ export default class Board {
             this.phraseBucket.add(index);
             return index;
         } else {
-            this.phraseBucket = new Set();
+            this.phraseBucket.clear();
             return random(0, phrases.length);
         }
     }
