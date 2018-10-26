@@ -66,11 +66,7 @@ export default class Board {
     }
 
     checkWin() {
-        let phrase = '';
-        this.letters.forEach(letter=> {
-            phrase += letter.value;
-        });
-        return phrase === this.answer;
+        return this.letters.reduce((phrase, letter) => phrase + letter.value, '') === this.answer;
     }
 
     findLetters(eventLetter) {
